@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace ConferenceTracker
@@ -40,10 +41,13 @@ namespace ConferenceTracker
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILogger<Startup> logger)
         {          
             if (env.IsDevelopment())
             {
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+                logger.LogInformation("Environment is in development");
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
@@ -56,6 +60,8 @@ namespace ConferenceTracker
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             using (var context = scope.ServiceProvider.GetService<ApplicationDbContext>())
                 context.Database.EnsureCreated();
+
+            app.UseCors(_allowedOrigins);
 
             app.UseHttpsRedirection();
 
