@@ -80,7 +80,7 @@ namespace ConferenceTracker.Controllers
                 _logger.LogWarning("Presentation id," + id + ", was not found.");
                 return NotFound();
             }
-            _logger.LogInformation("Presentation id," + id + ", was found. Returning 'Edit view'")
+            _logger.LogInformation("Presentation id," + id + ", was found. Returning 'Edit view'");
             ViewData["SpeakerId"] = new SelectList(_speakerRepository.GetAllSpeakers(), "Id", "Id", presentation?.SpeakerId);
             return View(presentation);
         }
